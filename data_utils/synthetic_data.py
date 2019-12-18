@@ -120,11 +120,10 @@ def make_an_irregular_group(num_trans,
     amount_arr = raw_amt_arr[select_mask]
     days_arr = raw_days_arr[select_mask].astype(int)
     
-    
     return days_arr, amount_arr
     
 
-def make_a_group():
+def make_a_group_inner():
     #select number of regualr groups
     num_reg_groups = np.random.randint(4,size=1)[0]
     #print(num_reg_groups)
@@ -187,6 +186,22 @@ def make_a_group():
         amt_list = amt_list + list(a_arr)
         group_id_list = group_id_list + [irreg_group_id]*len(d_arr)
     
+
+        #looks like some of the amount truncation can leave groups of size 1 so we need to make sure these are arrays and not scalrs
+
+        # if np.isscalar(day_list):
+        #     day_list = np.expand_dims(day_list, axis = 0)
+        # if np.isscalar(amt_list):
+        #     amt_list = np.expand_dims(amt_list, axis = 0)
+        # if np.isscalar(group_id_list):
+        #     group_id_list = np.expand_dims(group_id_list, axis = 0)                      
     
     return day_list, amt_list, group_id_list
     
+
+def make_a_group():
+    for i in range(100):
+        day_list, amt_list, group_id_list = make_a_group_inner()
+        if len(day_list) >= 3:
+            break
+    return day_list, amt_list, group_id_list
