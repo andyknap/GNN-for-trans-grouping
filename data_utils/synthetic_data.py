@@ -124,8 +124,12 @@ def make_an_irregular_group(num_trans,
     
 
 def make_a_group_inner():
+
     #select number of regualr groups
-    num_reg_groups = np.random.randint(4,size=1)[0]
+    #num_reg_groups = np.random.randint(4,size=1)[0]
+
+    num_reg_groups = 1
+
     #print(num_reg_groups)
     #select range of reg group sizes
     reg_group_sizes = np.random.randint(3,30, size=num_reg_groups)
@@ -163,6 +167,7 @@ def make_a_group_inner():
     #add some irregs
     
     if len(day_list) == 0 or np.random.uniform(0,1) <= 0.5:
+    #if np.random.uniform(0,1) <= -1:
     
         irreg_group_sizes = np.random.randint(3,30)
         irreg_group_amt_mean = np.random.uniform(-1000,-100)
