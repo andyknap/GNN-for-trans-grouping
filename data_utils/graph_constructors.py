@@ -196,4 +196,7 @@ def make_pyg_graph(inp_day_arr, inp_amt_arr, inp_group_arr):
 
     out_data.edge_pairs = edge_pair_idxs_ten
 
+    if len([*edge_pair_idxs_ten.shape]) != 2:
+        print('edge_pair_idxs_ten: ', edge_pair_idxs_ten)
+
     return out_data
