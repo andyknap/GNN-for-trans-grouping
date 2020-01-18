@@ -142,6 +142,7 @@ def make_a_group_inner():
     day_list = []
     amt_list = []
     group_id_list = []
+    group_type_list = []
     
     for g in range(num_reg_groups):
         #print(g)
@@ -162,6 +163,7 @@ def make_a_group_inner():
         day_list = day_list + list(d_arr+reg_group_offset)
         amt_list = amt_list + list(a_arr)
         group_id_list = group_id_list + [g]*len(d_arr)
+        group_type_list = group_type_list + [1]*len(d_arr)
         
         
     #add some irregs
@@ -190,7 +192,7 @@ def make_a_group_inner():
         day_list = day_list + list(d_arr)
         amt_list = amt_list + list(a_arr)
         group_id_list = group_id_list + [irreg_group_id]*len(d_arr)
-    
+        group_type_list = group_type_list + [0]*len(d_arr)
 
         #looks like some of the amount truncation can leave groups of size 1 so we need to make sure these are arrays and not scalrs
 
@@ -201,12 +203,12 @@ def make_a_group_inner():
         # if np.isscalar(group_id_list):
         #     group_id_list = np.expand_dims(group_id_list, axis = 0)                      
     
-    return day_list, amt_list, group_id_list
+    return day_list, amt_list, group_id_list, group_type_list
     
 
 def make_a_group():
     for i in range(100):
-        day_list, amt_list, group_id_list = make_a_group_inner()
+        day_list, amt_list, group_id_list, group_type_list = make_a_group_inner()
         if len(day_list) >= 3:
             break
-    return day_list, amt_list, group_id_list
+    return day_list, amt_list, group_id_list, group_type_list

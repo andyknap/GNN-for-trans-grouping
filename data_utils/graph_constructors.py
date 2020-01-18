@@ -172,10 +172,10 @@ def make_pyg_graph(inp_day_arr, inp_amt_arr, inp_group_arr):
     inp_norm_amt_arr = normalise_amounts(inp_amt_arr)
 
     for i in intervals:
-        out_edge_lst, out_edge_features_lst, out_edge_labels_lst = find_nearest_in_interval(inp_day_arr, inp_norm_amt_arr, inp_group_arr, cur_edge_lst =out_edge_lst, cur_edge_features_lst = out_edge_features_lst, cur_edge_labels_lst = out_edge_labels_lst, interval = i)
+        # out_edge_lst, out_edge_features_lst, out_edge_labels_lst = find_nearest_in_interval(inp_day_arr, inp_norm_amt_arr, inp_group_arr, cur_edge_lst =out_edge_lst, cur_edge_features_lst = out_edge_features_lst, cur_edge_labels_lst = out_edge_labels_lst, interval = i)
 
-    #out_edge_lst, out_edge_features_lst, out_edge_labels_lst = find_nearest_amount(inp_day_arr, inp_norm_amt_arr, inp_group_arr, cur_edge_lst =out_edge_lst, cur_edge_features_lst = out_edge_features_lst, cur_edge_labels_lst = out_edge_labels_lst)
-    #out_edge_lst, out_edge_features_lst, out_edge_labels_lst = find_nearest_day(inp_day_arr, inp_norm_amt_arr, inp_group_arr, cur_edge_lst =out_edge_lst, cur_edge_features_lst = out_edge_features_lst, cur_edge_labels_lst = out_edge_labels_lst)
+        out_edge_lst, out_edge_features_lst, out_edge_labels_lst = find_nearest_amount(inp_day_arr, inp_norm_amt_arr, inp_group_arr, cur_edge_lst =out_edge_lst, cur_edge_features_lst = out_edge_features_lst, cur_edge_labels_lst = out_edge_labels_lst)
+        out_edge_lst, out_edge_features_lst, out_edge_labels_lst = find_nearest_day(inp_day_arr, inp_norm_amt_arr, inp_group_arr, cur_edge_lst =out_edge_lst, cur_edge_features_lst = out_edge_features_lst, cur_edge_labels_lst = out_edge_labels_lst)
 
     edge_pair_idxs_arr = find_edge_pair_idxs(out_edge_lst)
 
@@ -195,5 +195,14 @@ def make_pyg_graph(inp_day_arr, inp_amt_arr, inp_group_arr):
     out_data = Data(x=x, edge_index=edge_index, edge_attr=edge_attr, y=y, pos=pos, norm=None, face=None)
 
     out_data.edge_pairs = edge_pair_idxs_ten
+
+    out_data.y_bi = y_bi
+
+    # out_data.group_id = dict(zip([i for i in range(len(inp_group_arr))], inp_group_arr)) 
+
+    out_data.group_id = torch.tensor(inp_group_arr, dtype = torch.long)
+
+    if len([*edge_pair_idxs_ten.shape]) != 2:
+        print('edge_pair_idxs_ten: ', edge_pair_idxs_ten)
 
     return out_data
