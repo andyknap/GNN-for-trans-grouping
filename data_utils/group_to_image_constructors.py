@@ -3,7 +3,7 @@ import timeit
 import statistics
 import time
 
-def make_an_image(inp_day_arr, inp_amt_arr, inp_group_arr, inp_type_arr, img_size = 212, amt_range = [-1500, 0]):
+def make_an_image(inp_day_arr, inp_amt_arr, inp_group_arr, inp_type_arr, img_size = 224, amt_range = [-1500, 0]):
     
     min_amt, max_amt = amt_range
     amt_spread = max_amt - min_amt
@@ -26,5 +26,8 @@ def make_an_image(inp_day_arr, inp_amt_arr, inp_group_arr, inp_type_arr, img_siz
         out_target[t_type, t_type_a_idx.astype(int) ,t_type_d_arr.astype(int)] = 1
 
     return out_img, out_target
+
+
+
 
 
