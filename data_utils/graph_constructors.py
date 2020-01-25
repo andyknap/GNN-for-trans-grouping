@@ -162,7 +162,19 @@ def find_edge_pair_idxs(inp_edge_lst):
     return np.array(edge_pairs)
 
 
-def make_pyg_graph(inp_day_arr, inp_amt_arr, inp_group_arr):
+def bin_array(num, m):
+    """Convert a positive integer num into an m-bit bit vector"""
+    return np.array(list(np.binary_repr(num).zfill(m))).astype(np.int8)
+
+
+def find_binary_node_features_from_days(inp_day_arr):
+    day_of_the_week_arr = np.mod(inp_day_arr,7)
+    day_bin_arr = np.array([bin_array(int(x), 10) for x in inp_day_arr])
+    day_of_the_week_bin_arr = np.array([bin_array(int(x), 3) for x in day_of_the_week_arr])
+    return np.hstack((day_bin_arr,day_of_the_week_bin_arr))
+
+
+def make_pyg_graph_with_edge_attr(inp_day_arr, inp_amt_arr, inp_group_arr):
     #run the above and put into PyG Data object
     intervals = [[5,9], [11,17], [25,35]]
     out_edge_lst = []
@@ -204,5 +216,65 @@ def make_pyg_graph(inp_day_arr, inp_amt_arr, inp_group_arr):
 
     if len([*edge_pair_idxs_ten.shape]) != 2:
         print('edge_pair_idxs_ten: ', edge_pair_idxs_ten)
+
+    return out_data
+
+
+def make_pyg_graph_no_edge_attr(inp_day_arr, inp_amt_arr, inp_group_arr, inp_type_arr):
+    #run the above and put into PyG Data object
+    intervals = [[5,9], [11,17], [25,35]]
+    out_edge_lst = []
+    out_edge_features_lst = []
+    out_edge_labels_lst = []
+
+    ##################normalise the amounts
+    inp_norm_amt_arr = normalise_amounts(inp_amt_arr)
+
+    ##################loop through the intervals and create the edges and edge features based on the various criteria
+    for _ in intervals:
+        # out_edge_lst, out_edge_features_lst, out_edge_labels_lst = find_nearest_in_interval(inp_day_arr, inp_norm_amt_arr, inp_group_arr, cur_edge_lst =out_edge_lst, cur_edge_features_lst = out_edge_features_lst, cur_edge_labels_lst = out_edge_labels_lst, interval = i)
+        out_edge_lst, out_edge_features_lst, out_edge_labels_lst = find_nearest_amount(inp_day_arr, inp_norm_amt_arr, inp_group_arr, cur_edge_lst =out_edge_lst, cur_edge_features_lst = out_edge_features_lst, cur_edge_labels_lst = out_edge_labels_lst)
+        out_edge_lst, out_edge_features_lst, out_edge_labels_lst = find_nearest_day(inp_day_arr, inp_norm_amt_arr, inp_group_arr, cur_edge_lst =out_edge_lst, cur_edge_features_lst = out_edge_features_lst, cur_edge_labels_lst = out_edge_labels_lst)
+
+    #################record the edge pairs so they the edges linking the same two node (but in different directions) can be easily paired if necessary
+    # edge_pair_idxs_arr = find_edge_pair_idxs(out_edge_lst)
+    # edge_pair_idxs_ten = torch.tensor(edge_pair_idxs_arr, dtype = torch.long)
+
+    ###############get the edge index tensor in the right format
+    out_edge_ten = torch.tensor(out_edge_lst)
+    edge_index= out_edge_ten.t().contiguous()
+
+    ################set the edge attributes
+    # edge_attr = torch.tensor(out_edge_features_lst, dtype = torch.float)
+
+    #################set the node attributes
+    bin_node_features = find_binary_node_features_from_days(inp_day_arr)
+    x_arr = np.concatenate((bin_node_features, np.expand_dims(inp_norm_amt_arr, axis = 1)), axis = 1)
+    x = torch.tensor(x_arr, dtype = torch.float)
+
+    #################set the labels for the edges
+    #################need to reduce y so we have only 1 output per edge pair and the orders are consistent with the edge pairs tensor that will be used in the training
+    # y_bi = torch.tensor(out_edge_labels_lst, dtype = torch.long)
+    # y= y_bi[edge_pair_idxs_ten[:,0]]
+
+    #################set the labels (types) for the nodes
+    y = torch.tensor(inp_type_arr, dtype = torch.long)
+
+    ##################set the data for the plotting
+    pos = torch.tensor([x for x in zip(inp_day_arr, inp_amt_arr)])
+
+    ##################create the graph object
+    # out_data = Data(x=x, edge_index=edge_index, edge_attr=edge_attr, y=y, pos=pos, norm=None, face=None)
+    out_data = Data(x=x, edge_index=edge_index, edge_attr=None, y=y, pos=pos, norm=None, face=None)
+
+
+    ##################add the additional attributes to the object
+    # out_data.edge_pairs = edge_pair_idxs_ten
+    # out_data.y_bi = y_bi
+    # out_data.group_id = torch.tensor(inp_group_arr, dtype = torch.long)
+
+
+    # if len([*edge_pair_idxs_ten.shape]) != 2:
+    #     print('edge_pair_idxs_ten: ', edge_pair_idxs_ten)
 
     return out_data
