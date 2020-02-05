@@ -125,10 +125,14 @@ def make_an_irregular_group(num_trans,
 
 def make_a_group_inner():
 
+    # structure the labels so that (ir)regular groups are always in a given range
+
     #select number of regualr groups
     #num_reg_groups = np.random.randint(4,size=1)[0]
 
-    num_reg_groups = 1
+    #with the current group labelling hack this value must be <= 3
+    # num_reg_groups = 1
+    num_reg_groups = np.random.randint(0,3)
 
     #print(num_reg_groups)
     #select range of reg group sizes
@@ -136,7 +140,7 @@ def make_a_group_inner():
     #select amount mean of reg group sizes
     reg_group_amt_means = np.random.uniform(-1000,-100, size=num_reg_groups)
     #select reg group offsets
-    reg_group_offsets = np.random.randint(0,300, size=num_reg_groups)
+    reg_group_offsets = np.random.randint(0,10, size=num_reg_groups)
     
     
     day_list = []
@@ -168,17 +172,24 @@ def make_a_group_inner():
         
     #add some irregs
     
+
+
+
     if len(day_list) == 0 or np.random.uniform(0,1) <= 0.5:
     #if np.random.uniform(0,1) <= -1:
     
         irreg_group_sizes = np.random.randint(3,30)
         irreg_group_amt_mean = np.random.uniform(-1000,-100)
         if len(day_list) == 0:
-            irreg_group_days_mean = np.random.randint(0,300)
+            irreg_group_days_mean = np.random.randint(0,150)
             irreg_group_id = 0
         else:
             irreg_group_days_mean = statistics.mean(day_list)
             irreg_group_id = max(group_id_list)+1
+
+        #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        #this is a bit of a hack to make sure irreg groups (of which the code only currently creates one) are labelled in a different range to regular
+        irreg_group_id = 3
 
 
         d_arr, a_arr = make_an_irregular_group(num_trans = irreg_group_sizes,

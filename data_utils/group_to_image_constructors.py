@@ -30,14 +30,15 @@ def make_an_image_from_type(inp_day_arr, inp_amt_arr, inp_group_arr, inp_type_ar
 
 
 
-def make_an_image_from_group(inp_day_arr, inp_amt_arr, inp_group_arr, inp_type_arr, img_size = 224, amt_range = [-1500, 0]):
+def make_an_image_from_group(inp_day_arr, inp_amt_arr, inp_group_arr, inp_type_arr, img_size = 224, amt_range = [-1500, 0], permute_group_ids = False):
     
     min_amt, max_amt = amt_range
     amt_spread = max_amt - min_amt
 
     #we should scramble the group_ids to prevent any inadvertant correlations between group type and number
-    sub_dict = dict(zip(np.arange(4),np.random.choice(np.arange(4),4, replace = False)))
-    inp_group_arr = np.array([sub_dict[i] for i in inp_group_arr])
+    if permute_group_ids:
+        sub_dict = dict(zip(np.arange(4),np.random.choice(np.arange(4),4, replace = False)))
+        inp_group_arr = np.array([sub_dict[i] for i in inp_group_arr])
 
     a_idx = np.array([(np.abs(np.arange(min_amt,max_amt, amt_spread/img_size) - x)).argmin() for x in inp_amt_arr])
 
@@ -57,9 +58,10 @@ def make_an_image_from_group(inp_day_arr, inp_amt_arr, inp_group_arr, inp_type_a
 
     #now create the tensor of permuted targets to use in the loss fuction
 
-    out_target_perm = np.array([out_target[np.array(x), :, :] for x in itertools.permutations([0,1,2,3])])
+    # out_target_perm = np.array([out_target[np.array(x), :, :] for x in itertools.permutations([0,1,2,3])])
 
 
-    return out_img, out_target_perm
+    return out_img, out_target
+
 
 
