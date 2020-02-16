@@ -205,6 +205,17 @@ def make_a_group_inner():
         group_id_list = group_id_list + [irreg_group_id]*len(d_arr)
         group_type_list = group_type_list + [0]*len(d_arr)
 
+
+        #trim any transactions with date <=224
+
+        amt_list = [a for i, a in enumerate(amt_list) if day_list[i] < 224]
+        group_id_list = [g for i, g in enumerate(group_id_list) if day_list[i] < 224]
+        group_type_list = [t for i, t in enumerate(group_type_list) if group_type_list[i] < 224]
+        day_list = [d for i, d in enumerate(day_list) if d < 224]
+
+
+
+
         #looks like some of the amount truncation can leave groups of size 1 so we need to make sure these are arrays and not scalrs
 
         # if np.isscalar(day_list):
