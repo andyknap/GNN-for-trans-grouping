@@ -136,7 +136,7 @@ def make_a_group_inner():
 
     #print(num_reg_groups)
     #select range of reg group sizes
-    reg_group_sizes = np.random.randint(3,30, size=num_reg_groups)
+    reg_group_sizes = np.random.randint(3,54, size=num_reg_groups)
     #select amount mean of reg group sizes
     reg_group_amt_means = np.random.uniform(-1000,-100, size=num_reg_groups)
     #select reg group offsets
@@ -147,12 +147,25 @@ def make_a_group_inner():
     amt_list = []
     group_id_list = []
     group_type_list = []
+
+    #select whether the regular groups are weekly or monthly
+    group_type = np.random.randint(0,2)
+    if group_type == 0:
+        period = 7
+        #select range of reg group sizes
+        reg_group_sizes = np.random.randint(3,54, size=num_reg_groups)
+        period_var = 1
+    else:
+        period = 30
+        #select range of reg group sizes
+        reg_group_sizes = np.random.randint(3,12, size=num_reg_groups)
+        period_var = 3
     
     for g in range(num_reg_groups):
         #print(g)
         
-        d_arr, a_arr = make_a_regular_group(period = 7
-                             , period_var = 1
+        d_arr, a_arr = make_a_regular_group(period = period
+                             , period_var = period_var
                              , num_periods = reg_group_sizes[g]
                              , amount_mean = reg_group_amt_means[g]
                              , amount_spread = 10
@@ -206,12 +219,12 @@ def make_a_group_inner():
         group_type_list = group_type_list + [0]*len(d_arr)
 
 
-        #trim any transactions with date <=224
+        #trim any transactions with date <=384
 
-        amt_list = [a for i, a in enumerate(amt_list) if day_list[i] < 224]
-        group_id_list = [g for i, g in enumerate(group_id_list) if day_list[i] < 224]
-        group_type_list = [t for i, t in enumerate(group_type_list) if group_type_list[i] < 224]
-        day_list = [d for i, d in enumerate(day_list) if d < 224]
+        amt_list = [a for i, a in enumerate(amt_list) if day_list[i] < 384]
+        group_id_list = [g for i, g in enumerate(group_id_list) if day_list[i] < 384]
+        group_type_list = [t for i, t in enumerate(group_type_list) if group_type_list[i] < 384]
+        day_list = [d for i, d in enumerate(day_list) if d < 384]
 
 
 

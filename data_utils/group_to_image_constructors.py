@@ -4,7 +4,7 @@ import statistics
 import time
 import itertools
 
-def make_an_image_from_type(inp_day_arr, inp_amt_arr, inp_group_arr, inp_type_arr, img_size = 224, amt_range = [-1500, 0]):
+def make_an_image_from_type(inp_day_arr, inp_amt_arr, inp_group_arr, inp_type_arr, img_size = 384, amt_range = [-1500, 0]):
     
     min_amt, max_amt = amt_range
     amt_spread = max_amt - min_amt
@@ -30,10 +30,12 @@ def make_an_image_from_type(inp_day_arr, inp_amt_arr, inp_group_arr, inp_type_ar
 
 
 
-def make_an_image_from_group(inp_day_arr, inp_amt_arr, inp_group_arr, inp_type_arr, img_size = 224, amt_range = [-1500, 0], permute_group_ids = False):
+def make_an_image_from_group(inp_day_arr, inp_amt_arr, inp_group_arr, inp_type_arr, img_size = 384, amt_range = [-1500, 0], permute_group_ids = False):
     
     min_amt, max_amt = amt_range
     amt_spread = max_amt - min_amt
+
+    inp_day_arr = np.array(inp_day_arr).astype(int)
 
     #we should scramble the group_ids to prevent any inadvertant correlations between group type and number
     if permute_group_ids:

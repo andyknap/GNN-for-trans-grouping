@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
-from torch_geometric.data import Data
+# from torch_geometric.data import Data
 from itertools import product
 import torch
 
@@ -36,6 +36,7 @@ def find_edge_features(inp_day_arr, inp_norm_amt_arr, inp_group_arr, edge):
     edge_amt_diff_arr = np.array([inp_norm_amt_arr[edge[1]] - inp_norm_amt_arr[edge[0]]])
 
     return np.concatenate((edge_amt_diff_arr, np.array([direction]), one_hot_day_arr), axis = None)
+
 
 
 def find_edge_labels(inp_day_arr, inp_norm_amt_arr, inp_group_arr, edge):
