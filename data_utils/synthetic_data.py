@@ -148,19 +148,25 @@ def make_a_group_inner():
     group_id_list = []
     group_type_list = []
 
-    #select whether the regular groups are weekly or monthly
-    group_type = np.random.randint(0,2)
-    if group_type == 0:
-        period = 7
-        #select range of reg group sizes
-        reg_group_sizes = np.random.randint(3,54, size=num_reg_groups)
-        period_var = 1
-    else:
-        period = 30
-        #select range of reg group sizes
-        reg_group_sizes = np.random.randint(3,12, size=num_reg_groups)
-        period_var = 3
+    # #select whether the regular groups are weekly or monthly
+    # group_type = np.random.randint(0,2)
+    # if group_type == 0:
+    #     period = 7
+    #     #select range of reg group sizes
+    #     reg_group_sizes = np.random.randint(3,54, size=num_reg_groups)
+    #     period_var = 1
+    # else:
+    #     period = 30
+    #     #select range of reg group sizes
+    #     reg_group_sizes = np.random.randint(3,12, size=num_reg_groups)
+    #     period_var = 3
     
+    period = 30
+    #select range of reg group sizes
+    reg_group_sizes = np.random.randint(3,12, size=num_reg_groups)
+    period_var = 3
+
+
     for g in range(num_reg_groups):
         #print(g)
         
